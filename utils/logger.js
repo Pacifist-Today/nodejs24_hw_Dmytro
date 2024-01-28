@@ -8,6 +8,8 @@ function logger (moduleName) {
     }
 }
 
-module.exports = {
-    logger
+function color () {
+    return 'lol'
 }
+
+module.exports = logger
