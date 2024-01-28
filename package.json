@@ -1,0 +1,28 @@
+{
+  "name": "hillel-nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon main.js",
+    "debug": "node --inspect-brk ./main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pacifist-Today/nodejs24_hw_Dmytro.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Pacifist-Today/nodejs24_hw_Dmytro/issues"
+  },
+  "homepage": "https://github.com/Pacifist-Today/nodejs24_hw_Dmytro#readme",
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "config": "^3.3.10",
+    "dotenv": "^16.4.1"
+  }
+}
