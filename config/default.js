@@ -1,7 +1,5 @@
 const loggerLevel = process.env.LOG_LEVEL === undefined ? "warn" : process.env.LOG_LEVEL
-
-const colors = require("colors")
-const colorSwitching = process.env.COLOR_ENABLED === '1' ? colors.enable() : colors.disable()
+const colorSwitching = process.env.COLOR_ENABLED === '1' ? "COLOR_ENABLED" : "0"
 
 module.exports = {
     isColorEnabled: colorSwitching,

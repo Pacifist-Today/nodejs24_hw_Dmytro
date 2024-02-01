@@ -1,7 +1,8 @@
 const colors = require("colors")
 const config = require('config')
 const logLevel = config.logLevel
-config.isColorEnabled
+
+config.isColorEnabled === "COLOR_ENABLED" ? colors.enable() : colors.disable()
 
 function logger (moduleName) {
     const info = (...args) => console.info(colors.grey(moduleName), ...args)
@@ -21,14 +22,14 @@ function loggsCalling(info, warn, error) {
     }
     else if (logLevel === 'warn') {
         return {
-            info: () => new Error(),
+            info: () => undefined,
             warn,
             error
         }
     } else if (logLevel === 'error') {
         return {
-            info: () => new Error(),
-            warn: () => new Error(),
+            info: () => undefined,
+            warn: () => undefined,
             error
         }
     } else throw new Error("Incorrect logger level")
