@@ -2,7 +2,7 @@ const colors = require("colors")
 const config = require('config')
 const logLevel = config.logLevel
 
-config.isColorEnabled === "COLOR_ENABLED" ? colors.enable() : colors.disable()
+config.isColorEnabled ? colors.enable() : colors.disable()
 
 function logger (moduleName) {
     const info = (...args) => console.info(colors.grey(moduleName), ...args)
