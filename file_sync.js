@@ -1,7 +1,8 @@
-const logger = require("./utils/logger")('main')
 const fs = require("fs")
 const promise = require("fs/promises")
 const path = require("path")
+
+const logger = require("./utils/logger")('file sync')
 
 const start = async () => {
     const source = await promise.readdir('./source')
