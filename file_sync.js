@@ -9,7 +9,10 @@ const start = async () => {
 
     const transfer = async (catalogue, receiver, universalPath) =>
         catalogue.map(async element => {
-            const isDir = await promise.stat(`./source/${universalPath}${element}`).then(res => res.isDirectory())
+            const sourcePath = path.join(".", "source", universalPath, element)
+            const targetPath = path.join(".", "target", universalPath, element)
+
+            const isDir = await promise.stat(sourcePath).then(res => res.isDirectory())
 
             // не работает без then
             // const isDir = await promise.stat(`${sourcePath}${element}`).isDirectory()
@@ -21,22 +24,22 @@ const start = async () => {
 
             if (isDir) {
                 if (!receiver.includes(element)) {
-                    fs.mkdir(`./target/${universalPath}${element}`, (err, res) => {
-                        logger.info(`Creating directory: ${universalPath}${element}`)
+                    fs.mkdir(targetPath, (err, res) => {
+                        logger.info(`Creating directory: ${targetPath}`)
                     })
                 }
-                else logger.warn(`Entering existing directory: ${universalPath}${element}`)
+                else logger.warn(`Entering existing directory: ${targetPath}`)
 
-                const originalDir = await promise.readdir(`./source/${universalPath}/${element}`)
-                const receiverDir = await promise.readdir(`./target/${universalPath}/${element}`)
+                const originalDir = await promise.readdir(sourcePath)
+                const receiverDir = await promise.readdir(targetPath)
 
                 const newPath = `${universalPath}${element}/`
 
                 await transfer(originalDir, receiverDir, newPath)
             }
             else if (!receiver.includes(element) && !isDir) {
-                fs.copyFile(`./source/${universalPath}/${element}`, `./target/${universalPath}/${element}`, (err, res) => {
-                    logger.info(`Creating file: ${universalPath}${element}`)
+                fs.copyFile(sourcePath, targetPath, (err, res) => {
+                    logger.info(`Creating file: ${targetPath}`)
                 })
             }
             else if (receiver.includes(element)) {
