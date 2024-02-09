@@ -1,4 +1,4 @@
-const logger = require("./utils/logger")('main')
+const logger = require("./utils/logger")('file_sync')
 const fs = require("fs")
 const promise = require("fs/promises")
 const path = require("path")
@@ -47,7 +47,8 @@ const start = async () => {
             }
         })
 
-    transfer(source, target, "")}
+    transfer(source, target, "")
+}
 
 module.exports = {
     start
