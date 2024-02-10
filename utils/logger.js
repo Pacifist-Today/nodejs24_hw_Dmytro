@@ -19,12 +19,6 @@ const isLogsDir = fs.readdirSync(".").includes(logsPath)
 const writeInfo = fs.createWriteStream(infoPath, {flags: "a"})
 const writeErrors = fs.createWriteStream(errorsPath, {flags: "a"})
 
-// process.once("before exit", () => {
-//     writeInfo.end()
-//     writeErrors.end()
-//     console.log("before exit")
-// })
-
 function logger (moduleName) {
     const info = (...args) => {
         writeLogs("info", ...args)
@@ -45,9 +39,11 @@ function logger (moduleName) {
 function writeLogs(logType, ...args) {
     if (logType === "info") {
         writeInfo.write(`${new Date().toLocaleString()}: ${args}\n`)
-    } else if (logType === "error" || logType === "warn") {
+    }
+    else if (logType === "error" || logType === "warn") {
         writeErrors.write(`${new Date().toLocaleString()}: ${args}\n`)
-    } else throw new Error("Incorrect logType")
+    }
+    else throw new Error("Incorrect logType")
 }
 
 function loggsCalling(info, warn, error) {
@@ -74,5 +70,10 @@ function loggsCalling(info, warn, error) {
     }
     else throw new Error("Incorrect logger level")
 }
+
+process.once("beforeExit", () => {
+    writeInfo.end()
+    writeErrors.end()
+})
 
 module.exports = logger
