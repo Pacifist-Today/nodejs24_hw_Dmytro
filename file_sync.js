@@ -5,49 +5,42 @@ const path = require("path")
 
 const start = async () => {
     const source = await promise.readdir('./source')
-    const target = await promise.readdir("./target")
+    const targets = await promise.readdir("./target")
 
     const transfer = async (catalogue, receiver, universalPath) =>
         catalogue.map(async element => {
             const sourcePath = path.join(".", "source", universalPath, element)
             const targetPath = path.join(".", "target", universalPath, element)
 
-            const isDir = await promise.stat(sourcePath).then(res => res.isDirectory())
+            const stats = await promise.stat(sourcePath)
 
-            // не работает без then
-            // const isDir = await promise.stat(`${sourcePath}${element}`).isDirectory()
-
-            // работает без then
-            // const file = await promise.stat(`${sourcePath}${element}`)
-            // const isDir = file.isDirectory()
-            // console.log(isDir)
-
-            if (isDir) {
-                if (!receiver.includes(element)) {
-                    fs.mkdir(targetPath, (err, res) => {
-                        logger.info(`Creating directory: ${targetPath}`)
-                    })
+            if (stats.isFile()) {
+                if (receiver.includes(element)) {
+                    logger.warn(`${element} is already existed, skipping`);
+                    return;
                 }
-                else logger.warn(`Entering existing directory: ${targetPath}`)
 
-                const originalDir = await promise.readdir(sourcePath)
-                const receiverDir = await promise.readdir(targetPath)
+                await promise.copyFile(sourcePath, targetPath);
+                logger.info(`Created file: ${targetPath}`);
 
-                const newPath = `${universalPath}${element}/`
-
-                await transfer(originalDir, receiverDir, newPath)
+                return;
             }
-            else if (!receiver.includes(element) && !isDir) {
-                fs.copyFile(sourcePath, targetPath, (err, res) => {
-                    logger.info(`Creating file: ${targetPath}`)
-                })
-            }
-            else if (receiver.includes(element)) {
-                logger.warn(`${element} is already existed`)
+
+            if (stats.isDirectory()) {
+                if (!receiver.includes(element)) {
+                    await promise.mkdir(targetPath);
+                }
+
+                const originalDir = await promise.readdir(sourcePath);
+                const receiverDir = await promise.readdir(targetPath);
+
+                const newPath = `${universalPath}${element}/`;
+
+                await transfer(originalDir, receiverDir, newPath);
             }
         })
 
-    transfer(source, target, "")
+    await transfer(source, targets, "")
 }
 
 module.exports = {
