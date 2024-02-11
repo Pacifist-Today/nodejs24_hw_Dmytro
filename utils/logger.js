@@ -20,21 +20,22 @@ const errorLogStream = fs.createWriteStream(errorsPath, {flags: "a"})
 
 function makeLogger (moduleName) {
     const info = (...args) => {
-        writeLogsToFileStream(infoLogStream, ...args)
+
+        writeLogsToFileStream(infoLogStream, JSON.stringify(args))
         if (logLevel === 'info') {
             console.info(colors.grey(moduleName), ...args)
         }
     }
 
     const warn = (...args) => {
-        writeLogsToFileStream(errorLogStream, ...args)
+        writeLogsToFileStream(errorLogStream, JSON.stringify(args))
         if (logLevel !== 'error') {
             console.warn(colors.yellow(moduleName), ...args)
         }
     }
 
     const error = (...args) => {
-        writeLogsToFileStream(errorLogStream, ...args)
+        writeLogsToFileStream(errorLogStream, JSON.stringify(args))
         console.error(colors.red(moduleName), ...args)
     }
 
