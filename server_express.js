@@ -19,8 +19,7 @@ const logStream = rfs.createStream("endpoints.log", {
     path: ("./logs")
 })
 
-server.use(morgan("dev", { stream: logStream }))
-server.use(morgan("dev"))
+server.use(morgan("tiny", { stream: logStream }))
 
 server.listen(8000, () => logger.info("express server is running on 8000"))
 

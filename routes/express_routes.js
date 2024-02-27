@@ -8,9 +8,10 @@ const users = []
 
 try {
     const userData = fs.readFileSync(FILE_PATH, 'utf8');
-    users.push(JSON.parse(userData))
+    users.push(...JSON.parse(userData))
 } catch (err) {
-    console.error("File doesn't exist", err)
+    console.error("File doesn't exist, creating file")
+    fs.writeFile(FILE_PATH, "[]", () => {})
 }
 
 router.post('/', userValidator, (req, resp) => {
@@ -25,9 +26,9 @@ router.post('/', userValidator, (req, resp) => {
 
 router.get('/', (req, resp) => {
     if (users.length === 0) {
-        resp
-            .status(500)
-            .json({error: "Empty base"})
+        return resp
+            .status(200)
+            .send("Base is empty")
     }
 
     resp.status(200)
@@ -51,27 +52,21 @@ router.get('/:userId', idValidator, (req, resp) => {
 router.delete("/:userId", idValidator, (req, resp) => {
     const { userId } = req.params.userId
 
-    if (users.length === 0) {
-        return resp
-            .status(500)
-            .json({error: "Empty base"})
-    }
-
     const user = users.findIndex(el => el.id === userId)
 
     if (user === -1) {
         return resp
-            .status(404)
+            .status(200)
             .json({error: "User not found"})
     }
 
     const removedUser = users.splice(user, 1)
 
-    resp.status(200)
+    resp.status(204)
         .json(removedUser)
 })
 
-process.on('beforeExit', () => {
+process.on('SIGINT', () => {
     fs.writeFileSync(FILE_PATH, JSON.stringify(users), 'utf8');
     console.log('data saved in file:', users);
 });
